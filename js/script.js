@@ -6,16 +6,27 @@ document.addEventListener("DOMContentLoaded", () => {
   const openButton = document.getElementById("openInvitation");
   const main = document.getElementById("mainContent");
 
-  openButton?.addEventListener("click", () => {
+  const openEnvelope = () => {
     const flap = document.querySelector(".flap");
     if (flap) flap.style.transform = "rotateX(180deg)";
+    opening?.classList.add("opening-active");
     window.setTimeout(() => {
       opening?.classList.add("dismissed");
-      main?.setAttribute("aria-hidden", "false");
+      main?.removeAttribute("aria-hidden");
       document.body.classList.remove("locked");
-    }, 520);
-    window.setTimeout(() => opening?.remove(), 1450);
+    }, 620);
+    window.setTimeout(() => opening?.remove(), 1500);
+  };
+
+  const envelopeTap = document.getElementById("envelopeTap");
+  envelopeTap?.addEventListener("click", openEnvelope);
+  envelopeTap?.addEventListener("keydown", (event) => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      openEnvelope();
+    }
   });
+  openButton?.addEventListener("click", openEnvelope);
 
   // Five-second hero slide rotation
   const slides = [...document.querySelectorAll(".hero-slide")];
@@ -51,6 +62,130 @@ document.addEventListener("DOMContentLoaded", () => {
 
   updateCountdown();
   window.setInterval(updateCountdown, 1000);
+
+
+  // Lightweight 12-image gallery. Only the active image is swapped; there is
+  // one timer, so slow image loads cannot create a queue of transitions.
+  const galleryImages = Array.from({ length: 12 }, (_, i) => `images/Image${i + 1}.jpg`);
+  const galleryCaptions = [
+    "Together, in the little moments.",
+    "A memory worth keeping close.",
+    "Laughter, warmth and family.",
+    "The journey continues.",
+    "A beautiful chapter in our story.",
+    "Two lives, one shared direction.",
+    "Love lives in the ordinary days.",
+    "A quiet moment before the celebration.",
+    "Surrounded by warmth and memories.",
+    "The people and moments that matter.",
+    "Almost time for the next chapter.",
+    "Ready for the day ahead."
+  ];
+  const galleryMain = document.getElementById("galleryMainImage");
+  const galleryWrap = document.getElementById("galleryImageWrap");
+  const galleryCaption = document.getElementById("galleryCaption");
+  const galleryCurrent = document.getElementById("galleryCurrent");
+  const gallerySideText = document.getElementById("gallerySideText");
+  const galleryProgress = document.getElementById("galleryProgress");
+  const galleryThumbs = [...document.querySelectorAll(".gallery-thumb")];
+  const galleryPrev = document.getElementById("galleryPrev");
+  const galleryNext = document.getElementById("galleryNext");
+  let galleryIndex = 0;
+  let galleryTimer = null;
+  let galleryBusy = false;
+
+  function updatePreviewSlots() {
+    galleryThumbs.forEach((thumb, slot) => {
+      const index = (galleryIndex + slot) % galleryImages.length;
+      const img = thumb.querySelector("img");
+      if (img) {
+        img.src = galleryImages[index];
+        img.alt = `Photo ${index + 1}`;
+      }
+      thumb.dataset.index = String(index);
+      thumb.classList.toggle("active", slot === 0);
+      thumb.setAttribute("aria-label", `View photo ${index + 1}`);
+    });
+  }
+
+  function resetGalleryTimer() {
+    if (galleryTimer) window.clearTimeout(galleryTimer);
+    if (galleryMain) {
+      galleryTimer = window.setTimeout(() => showGallery(galleryIndex + 1), 5000);
+    }
+  }
+
+  function startProgress() {
+    if (!galleryProgress) return;
+    galleryProgress.style.transition = "none";
+    galleryProgress.style.width = "0%";
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        galleryProgress.style.transition = "width 5s linear";
+        galleryProgress.style.width = "100%";
+      });
+    });
+  }
+
+  function preloadGalleryImages(center) {
+    [1, 2, 3].forEach((step) => {
+      const img = new Image();
+      img.src = galleryImages[(center + step) % galleryImages.length];
+    });
+  }
+
+  function showGallery(index, immediate = false) {
+    if (!galleryMain || !galleryWrap || galleryBusy) return;
+    galleryBusy = true;
+    galleryIndex = (index + galleryImages.length) % galleryImages.length;
+    const nextSrc = galleryImages[galleryIndex];
+    galleryWrap.classList.add("changing");
+
+    const apply = () => {
+      galleryMain.src = nextSrc;
+      galleryMain.alt = galleryIndex === 0 ? "Sara and Moses" : `Photo ${galleryIndex + 1}`;
+      galleryCaption.textContent = galleryCaptions[galleryIndex];
+      galleryCurrent.textContent = String(galleryIndex + 1).padStart(2, "0");
+      gallerySideText.textContent = galleryCaptions[galleryIndex];
+      updatePreviewSlots();
+      preloadGalleryImages(galleryIndex);
+      galleryWrap.classList.remove("changing");
+      galleryBusy = false;
+      startProgress();
+      resetGalleryTimer();
+    };
+
+    if (immediate) {
+      apply();
+      return;
+    }
+
+    const nextImage = new Image();
+    nextImage.onload = apply;
+    nextImage.onerror = apply;
+    nextImage.src = nextSrc;
+  }
+
+  galleryThumbs.forEach((thumb) => {
+    thumb.addEventListener("click", () => showGallery(Number(thumb.dataset.index)));
+  });
+  galleryPrev?.addEventListener("click", () => showGallery(galleryIndex - 1));
+  galleryNext?.addEventListener("click", () => showGallery(galleryIndex + 1));
+
+  if (galleryMain) {
+    updatePreviewSlots();
+    galleryMain.addEventListener("error", () => {
+      galleryWrap?.classList.remove("changing");
+      galleryBusy = false;
+      resetGalleryTimer();
+    });
+    galleryMain.addEventListener("load", () => {
+      galleryWrap?.classList.remove("changing");
+      galleryBusy = false;
+    });
+    startProgress();
+    resetGalleryTimer();
+  }
 
   // Gift copy
   const choices = [...document.querySelectorAll(".gift-option")];
@@ -101,11 +236,22 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
-// Requested finishing touches
-(function(){
-  const year=document.getElementById("currentYear"); if(year) year.textContent=new Date().getFullYear();
-  const top=document.getElementById("backTop");
-  function toggleTop(){if(top) top.classList.toggle("show",window.scrollY>450)}
-  addEventListener("scroll",toggleTop,{passive:true}); toggleTop();
-  top?.addEventListener("click",()=>scrollTo({top:0,behavior:"smooth"}));
+// Final polish: current year and back-to-top button.
+(() => {
+  const year = document.getElementById("currentYear");
+  if (year) year.textContent = new Date().getFullYear();
+
+  const topButton = document.getElementById("backTop");
+  if (!topButton) return;
+
+  const toggleTop = () => {
+    topButton.classList.toggle("show", window.scrollY > 450);
+  };
+
+  window.addEventListener("scroll", toggleTop, { passive: true });
+  toggleTop();
+
+  topButton.addEventListener("click", () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
 })();
