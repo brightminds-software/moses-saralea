@@ -31,7 +31,13 @@
     <div class="envelope-bg"></div>
     <div class="grain"></div>
 
-    <div class="envelope-visual" aria-hidden="true">
+    <div
+      class="envelope-visual"
+      id="envelopeTap"
+      role="button"
+      tabindex="0"
+      aria-label="Tap to open the invitation"
+    >
       <div class="letter">
         <span>NYOMBO / RURACIO</span>
         <strong>Sara <i>&amp;</i> Moses</strong>
@@ -39,7 +45,8 @@
       </div>
       <div class="envelope"></div>
       <div class="flap"></div>
-      <div class="seal">S<span>&amp;</span>M</div>
+      <div class="seal"><strong>OPEN</strong><span>S &amp; M</span></div>
+      <span class="envelope-tap-label">Tap the envelope</span>
     </div>
 
     <div class="envelope-content">
@@ -47,9 +54,7 @@
       <h1>NYOMBO <span>/</span> RURACIO</h1>
       <p class="names">SARA <em>&amp;</em> MOSES</p>
       <p class="date-line">08 JANUARY 2027 · HOMABAY COUNTY</p>
-      <button id="openInvitation" class="open-btn" type="button">
-        Open your invitation <b>↗</b>
-      </button>
+      <p class="open-note">Tap the envelope to open the message</p>
     </div>
 
     <small class="envelope-hint">Love · family · heritage</small>
@@ -166,30 +171,44 @@
       </div>
     </section>
 
-    <!-- PHOTO RAIL -->
-    <section class="photo-rail" aria-label="Photo memories">
-      <div class="photo-rail-copy">
-        <p class="eyebrow">A few moments</p>
-        <h3>From our story<br>to this day.</h3>
+    <!-- MODERN SLIDESHOW -->
+    <!-- GALLERY -->
+    <section class="section gallery-showcase" id="gallery">
+      <div class="container gallery-head">
+        <div>
+          <p class="eyebrow">02 · Our story</p>
+          <h2>Moments that<br><em>feel like us.</em></h2>
+        </div>
+        <p class="gallery-intro">A quiet collection of moments, presented one frame at a time.</p>
       </div>
-      <div class="photo-rail-window">
-        <div class="photo-rail-track" id="photoRailTrack">
-          <img src="images/Image2.jpg" alt="" loading="lazy">
-          <img src="images/Image5.jpg" alt="" loading="lazy">
-          <img src="images/Image8.jpg" alt="" loading="lazy">
-          <img src="images/Image11.jpg" alt="" loading="lazy">
-          <img src="images/Image3.jpg" alt="" loading="lazy">
-          <img src="images/Image7.jpg" alt="" loading="lazy">
-          <img src="images/Image10.jpg" alt="" loading="lazy">
-          <img src="images/Image12.jpg" alt="" loading="lazy">
-          <img src="images/Image2.jpg" alt="" loading="lazy">
-          <img src="images/Image5.jpg" alt="" loading="lazy">
-          <img src="images/Image8.jpg" alt="" loading="lazy">
-          <img src="images/Image11.jpg" alt="" loading="lazy">
-          <img src="images/Image3.jpg" alt="" loading="lazy">
-          <img src="images/Image7.jpg" alt="" loading="lazy">
-          <img src="images/Image10.jpg" alt="" loading="lazy">
-          <img src="images/Image12.jpg" alt="" loading="lazy">
+
+      <div class="container gallery-stage">
+        <div class="gallery-feature">
+          <div class="gallery-image-wrap" id="galleryImageWrap">
+            <img id="galleryMainImage" src="images/Image1.jpg" alt="Sara and Moses" fetchpriority="high">
+            <div class="gallery-number"><span id="galleryCurrent">01</span><i></i><span>12</span></div>
+            <div class="gallery-caption" id="galleryCaption">Together, in the little moments.</div>
+            <div class="gallery-progress"><span id="galleryProgress"></span></div>
+          </div>
+        </div>
+
+        <div class="gallery-side">
+          <div class="gallery-side-copy">
+            <span class="slide-label">Our memories</span>
+            <p id="gallerySideText">A few frames from the journey that brought us here.</p>
+          </div>
+
+          <div class="gallery-preview-grid" id="galleryThumbs" aria-label="Choose a photo">
+            <button class="gallery-thumb active" type="button" data-slot="0" aria-label="View photo 1"><img src="images/Image1.jpg" alt="" loading="lazy"></button>
+            <button class="gallery-thumb" type="button" data-slot="1" aria-label="View next photo"><img src="images/Image2.jpg" alt="" loading="lazy"></button>
+            <button class="gallery-thumb" type="button" data-slot="2" aria-label="View next photo"><img src="images/Image3.jpg" alt="" loading="lazy"></button>
+            <button class="gallery-thumb" type="button" data-slot="3" aria-label="View next photo"><img src="images/Image4.jpg" alt="" loading="lazy"></button>
+          </div>
+
+          <div class="gallery-controls">
+            <button id="galleryPrev" type="button" aria-label="Previous photo">←</button>
+            <button id="galleryNext" type="button" aria-label="Next photo">→</button>
+          </div>
         </div>
       </div>
     </section>
@@ -295,11 +314,19 @@
         <h2>Sara <span>&amp;</span> Moses</h2>
         <p>08 January 2027 · Malit's Home · Kanyipir</p>
       </div>
-      <div class="footer-bottom">© <span id="currentYear">2026</span> All Rights Reserved</div>
+      <div class="footer-bottom">
+        <span>© <strong id="currentYear">2026</strong> All Rights Reserved</span>
+        <a
+          class="shoplex-link"
+          href="https://wa.me/254780493390?text=Hello%20Shoplex%2C%20I%27m%20interested%20in%20a%20website%20like%20this."
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Contact Shoplex on WhatsApp"
+        >Built by Shoplex</a>
+      </div>
     </footer>
   </main>
-
-  <button class="back-top" id="backTop" type="button" aria-label="Back to top">↑</button>
+<button class="back-top" id="backTop" type="button" aria-label="Back to top">↑</button>
 
   <script src="js/script.js"></script>
 </body>
