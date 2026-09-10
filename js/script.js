@@ -1,247 +1,111 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // ==============================
-  // BASIC SETTINGS
-  // ==============================
-  // No event time was supplied, so the countdown targets the start of
-  // 8 January 2027 in East Africa Time (+03:00). Change this line later
-  // if the couple provides an exact ceremony time.
   const EVENT_DATE = "2027-01-08T00:00:00+03:00";
 
+  // Envelope opening
   const opening = document.getElementById("opening");
-  const openInvitation = document.getElementById("openInvitation");
-  const mainContent = document.getElementById("mainContent");
+  const openButton = document.getElementById("openInvitation");
+  const main = document.getElementById("mainContent");
 
-  const countdownBar = document.getElementById("countdownBar");
-  const countdownReopen = document.getElementById("reopenCountdown");
-  const closeCountdown = document.getElementById("closeCountdown");
-
-  // ==============================
-  // OPEN INVITATION
-  // ==============================
-  document.body.classList.add("locked");
-
-  // Trigger opening-screen entrance reveals.
-  requestAnimationFrame(() => {
-    document.querySelectorAll(".reveal-up").forEach((el) => el.classList.add("visible"));
-  });
-
-  openInvitation.addEventListener("click", () => {
-    opening.classList.add("dismissed");
-    mainContent.removeAttribute("aria-hidden");
-    document.body.classList.remove("locked");
-
-    // Give the opening transition time to finish, then remove it.
+  openButton?.addEventListener("click", () => {
+    const flap = document.querySelector(".flap");
+    if (flap) flap.style.transform = "rotateX(180deg)";
     window.setTimeout(() => {
-      opening.setAttribute("aria-hidden", "true");
-    }, 1100);
+      opening?.classList.add("dismissed");
+      main?.setAttribute("aria-hidden", "false");
+      document.body.classList.remove("locked");
+    }, 520);
+    window.setTimeout(() => opening?.remove(), 1450);
   });
 
-  // ==============================
-  // SCROLL REVEALS
-  // ==============================
-  const revealItems = document.querySelectorAll(".reveal");
+  // Five-second hero slide rotation
+  const slides = [...document.querySelectorAll(".hero-slide")];
+  let slideIndex = 0;
 
-  const revealObserver = new IntersectionObserver((entries, observer) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add("visible");
-        observer.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.12 });
+  if (slides.length > 1) {
+    window.setInterval(() => {
+      slides[slideIndex].classList.remove("active");
+      slideIndex = (slideIndex + 1) % slides.length;
+      slides[slideIndex].classList.add("active");
+    }, 5000);
+  }
 
-  revealItems.forEach((item) => revealObserver.observe(item));
-
-  // ==============================
-  // COUNTDOWN
-  // ==============================
-  const elements = {
+  // Countdown
+  const nodes = {
     days: document.getElementById("days"),
     hours: document.getElementById("hours"),
     minutes: document.getElementById("minutes"),
     seconds: document.getElementById("seconds")
   };
 
-  function pad(value, digits = 2) {
-    return String(value).padStart(digits, "0");
-  }
+  const pad = (value, size) => String(value).padStart(size, "0");
 
   function updateCountdown() {
-    const target = new Date(EVENT_DATE).getTime();
-    const now = Date.now();
-    const distance = Math.max(0, target - now);
+    const distance = Math.max(0, new Date(EVENT_DATE).getTime() - Date.now());
+    const total = Math.floor(distance / 1000);
 
-    const totalSeconds = Math.floor(distance / 1000);
-    const days = Math.floor(totalSeconds / 86400);
-    const hours = Math.floor((totalSeconds % 86400) / 3600);
-    const minutes = Math.floor((totalSeconds % 3600) / 60);
-    const seconds = totalSeconds % 60;
-
-    elements.days.textContent = pad(days, 3);
-    elements.hours.textContent = pad(hours);
-    elements.minutes.textContent = pad(minutes);
-    elements.seconds.textContent = pad(seconds);
-
-    if (distance <= 0) {
-      countdownBar.querySelector(".countdown-label strong").textContent = "It’s the day!";
-      countdownBar.querySelector(".countdown-label small").textContent = "08 January 2027";
-    }
+    nodes.days.textContent = pad(Math.floor(total / 86400), 3);
+    nodes.hours.textContent = pad(Math.floor((total % 86400) / 3600), 2);
+    nodes.minutes.textContent = pad(Math.floor((total % 3600) / 60), 2);
+    nodes.seconds.textContent = pad(total % 60, 2);
   }
 
   updateCountdown();
-  setInterval(updateCountdown, 1000);
+  window.setInterval(updateCountdown, 1000);
 
-  // ==============================
-  // COUNTDOWN MINIMIZE / REOPEN
-  // ==============================
-  closeCountdown.addEventListener("click", () => {
-    countdownBar.classList.add("hidden");
-    countdownReopen.classList.add("show");
-  });
+  // Gift copy
+  const choices = [...document.querySelectorAll(".gift-option")];
+  const status = document.getElementById("giftStatus");
 
-  countdownReopen.addEventListener("click", () => {
-    countdownBar.classList.remove("hidden");
-    countdownReopen.classList.remove("show");
-  });
+  choices.forEach((choice) => {
+    choice.addEventListener("click", async () => {
+      choices.forEach((item) => item.classList.remove("selected"));
+      choice.classList.add("selected");
 
-  // ==============================
-  // SLIDESHOW
-  // ==============================
-  const slides = [...document.querySelectorAll(".slide")];
-  const slideCounter = document.getElementById("slideCounter");
-  const prevSlide = document.getElementById("prevSlide");
-  const nextSlide = document.getElementById("nextSlide");
+      const name = choice.dataset.name;
+      const number = choice.dataset.number;
+      status.textContent = `${name}'s number is selected.`;
 
-  let currentSlide = 0;
-  let slideTimer;
+      let copied = false;
+      try {
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(number);
+          copied = true;
+        } else {
+          const textarea = document.createElement("textarea");
+          textarea.value = number;
+          textarea.setAttribute("readonly", "");
+          textarea.style.position = "fixed";
+          textarea.style.opacity = "0";
+          document.body.appendChild(textarea);
+          textarea.select();
+          copied = document.execCommand("copy");
+          textarea.remove();
+        }
+      } catch {
+        copied = false;
+      }
 
-  function renderSlide(index) {
-    if (!slides.length) return;
+      const copy = choice.querySelector(".gift-copy");
 
-    currentSlide = (index + slides.length) % slides.length;
-
-    slides.forEach((slide, i) => {
-      slide.classList.toggle("active", i === currentSlide);
-    });
-
-    slideCounter.textContent = `${pad(currentSlide + 1)} / ${pad(slides.length)}`;
-  }
-
-  function restartSlideTimer() {
-    window.clearInterval(slideTimer);
-    slideTimer = window.setInterval(() => {
-      renderSlide(currentSlide + 1);
-    }, 5500);
-  }
-
-  prevSlide.addEventListener("click", () => {
-    renderSlide(currentSlide - 1);
-    restartSlideTimer();
-  });
-
-  nextSlide.addEventListener("click", () => {
-    renderSlide(currentSlide + 1);
-    restartSlideTimer();
-  });
-
-  renderSlide(0);
-  restartSlideTimer();
-
-  // ==============================
-  // EXTRA POLISH: close countdown
-  // once page reaches very bottom, then reopen
-  // ==============================
-  const footerObserver = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        countdownBar.classList.add("hidden");
-        countdownReopen.classList.remove("show");
+      if (copied) {
+        copy.textContent = "Copied";
+        status.textContent = `${number} for ${name} has been copied.`;
+        window.setTimeout(() => {
+          copy.textContent = "Copy";
+        }, 2200);
+      } else {
+        status.textContent = `Please copy ${number} manually.`;
       }
     });
-  }, { threshold: 0.35 });
-
-  const closing = document.querySelector(".closing");
-  if (closing) footerObserver.observe(closing);
-
-  // Restore countdown after leaving closing section.
-  const pageObserver = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (!entry.isIntersecting && !countdownBar.classList.contains("hidden")) {
-        countdownBar.classList.remove("hidden");
-      }
-    });
-  }, { threshold: 0.35 });
-
-  const contactSection = document.getElementById("contact");
-  if (contactSection) pageObserver.observe(contactSection);
-
-  // ==============================
-  // COPY GIFT NUMBER
-  // ==============================
-  const copyGiftNumber = document.getElementById("copyGiftNumber");
-  const giftNumber = document.getElementById("giftNumber");
-  const copyStatus = document.getElementById("copyStatus");
-
-  async function copyText(text) {
-    if (navigator.clipboard && window.isSecureContext) {
-      await navigator.clipboard.writeText(text);
-      return;
-    }
-
-    const temp = document.createElement("textarea");
-    temp.value = text;
-    temp.setAttribute("readonly", "");
-    temp.style.position = "fixed";
-    temp.style.opacity = "0";
-    document.body.appendChild(temp);
-    temp.select();
-    const copied = document.execCommand("copy");
-    temp.remove();
-
-    if (!copied) {
-      throw new Error("Copy command failed");
-    }
-  }
-
-  copyGiftNumber.addEventListener("click", async () => {
-    const number = giftNumber.textContent.trim().replace(/\s+/g, "");
-
-    try {
-      await copyText(number);
-      copyGiftNumber.classList.add("copied");
-      copyGiftNumber.querySelector("span:last-child").textContent = "Copied!";
-      copyStatus.textContent = "0704594253 has been copied.";
-      window.setTimeout(() => {
-        copyGiftNumber.classList.remove("copied");
-        copyGiftNumber.querySelector("span:last-child").textContent = "Copy Number";
-        copyStatus.textContent = "";
-      }, 2200);
-    } catch {
-      copyStatus.textContent = "Please copy the number manually: 0704594253";
-    }
-  });
-
-  // ==============================
-  // BACK TO TOP
-  // ==============================
-  const backTop = document.getElementById("backTop");
-
-  window.addEventListener("scroll", () => {
-    backTop.classList.toggle("show", window.scrollY > 700);
-  }, { passive: true });
-
-  backTop.addEventListener("click", () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  });
-
-  // ==============================
-  // OPTIONAL: PAUSE SLIDESHOW WHEN TAB IS HIDDEN
-  // ==============================
-  document.addEventListener("visibilitychange", () => {
-    if (document.hidden) {
-      window.clearInterval(slideTimer);
-    } else {
-      restartSlideTimer();
-    }
   });
 });
+
+
+// Requested finishing touches
+(function(){
+  const year=document.getElementById("currentYear"); if(year) year.textContent=new Date().getFullYear();
+  const top=document.getElementById("backTop");
+  function toggleTop(){if(top) top.classList.toggle("show",window.scrollY>450)}
+  addEventListener("scroll",toggleTop,{passive:true}); toggleTop();
+  top?.addEventListener("click",()=>scrollTo({top:0,behavior:"smooth"}));
+})();
