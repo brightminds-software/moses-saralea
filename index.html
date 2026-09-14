@@ -57,6 +57,12 @@
       <p class="open-note">Tap the envelope to open the message</p>
     </div>
 
+    <div class="name-reveal" aria-hidden="true">
+      <span>With joy in our hearts</span>
+      <h2>Sara <i>&amp;</i> Moses</h2>
+      <small>08 January 2027</small>
+    </div>
+
     <small class="envelope-hint">Love · family · heritage</small>
   </section>
 
@@ -76,7 +82,6 @@
         <img class="hero-slide" src="images/Image9.jpg" alt="" loading="lazy">
         <img class="hero-slide" src="images/Image10.jpg" alt="" loading="lazy">
         <img class="hero-slide" src="images/Image11.jpg" alt="" loading="lazy">
-        <img class="hero-slide" src="images/Image12.jpg" alt="" loading="lazy">
       </div>
       <div class="hero-overlay"></div>
 
@@ -131,43 +136,36 @@
     <!-- DETAILS -->
     <section class="details">
       <div class="container details-grid">
-        <article class="detail dark">
+        <article class="detail dark date-detail">
           <span>DATE</span>
           <strong>08</strong>
           <h3>January 2027</h3>
         </article>
 
-        <article class="detail paper">
-          <span>VENUE</span>
-          <strong>Malit's<br>Home</strong>
-          <h3>Kanyipir · Karachuonyo</h3>
-          <p>Homabay County</p>
+        <article class="detail paper verse-detail" aria-label="Bible verses">
+          <span>BIBLE VERSES</span>
+          <div class="verse-slider" id="verseSlider" aria-live="polite">
+            <article class="verse-slide active">
+              <small>Prov 3: 5-6 · KJV</small>
+              <p>Trust in the LORD with all thine heart; and lean not unto thine own understanding. In all thy ways acknowledge him, and he shall direct thy paths.</p>
+            </article>
+            <article class="verse-slide">
+              <small>Matthew 18: 19-20 · KJV</small>
+              <p>Again I say unto you, That if two of you shall agree on earth as touching any thing that they shall ask, it shall be done for them of my Father which is in heaven. For where two or three are gathered together in my name, there am I in the midst of them.</p>
+            </article>
+            <article class="verse-slide">
+              <small>Colossians 3: 14-15 · KJV</small>
+              <p>And above all these things put on charity, which is the bond of perfectness. And let the peace of God rule in your hearts, to the which ye are called in one body; and be ye thankful.</p>
+            </article>
+          </div>
         </article>
 
-        <article class="detail clay">
-          <span>RSVP</span>
-          <strong>Come<br>celebrate.</strong>
-          <div class="contact-line"><span>Sara · 0712 311 302</span><a class="call-btn" href="tel:+254712311302">Call</a></div>
-          <div class="contact-line"><span>Moses · 0704 594 253</span><a class="call-btn" href="tel:+254704594253">Call</a></div>
+        <article class="detail clay quote-detail">
+          <span>A WORD OF LOVE</span>
+          <strong>Let love<br>lead.</strong>
+          <p class="detail-quote">“Let all that you do be done in love.”</p>
+          <small>1 Corinthians 16:14</small>
         </article>
-      </div>
-    </section>
-
-    <!-- STORY WITH OCCASIONAL IMAGE -->
-    <section class="section story">
-      <div class="container story-grid">
-        <div class="story-text">
-          <p class="eyebrow">02 · Our story</p>
-          <h2>Some moments<br>deserve to be <em>remembered.</em></h2>
-          <p>
-            A few photographs appear along the journey, letting the invitation breathe
-            while keeping the focus on the day itself.
-          </p>
-        </div>
-        <div class="story-photo">
-          <img src="images/Image6.jpg" alt="Sara and Moses" loading="lazy">
-          <span>In the moments between</span>
-        </div>
       </div>
     </section>
 
@@ -176,8 +174,8 @@
     <section class="section gallery-showcase" id="gallery">
       <div class="container gallery-head">
         <div>
-          <p class="eyebrow">02 · Our story</p>
-          <h2>Moments that<br><em>feel like us.</em></h2>
+          <p class="eyebrow">02 · Our memories</p>
+          <h2>Some moments<br><em>deserve to be remembered.</em></h2>
         </div>
         <p class="gallery-intro">A quiet collection of moments, presented one frame at a time.</p>
       </div>
@@ -186,7 +184,7 @@
         <div class="gallery-feature">
           <div class="gallery-image-wrap" id="galleryImageWrap">
             <img id="galleryMainImage" src="images/Image1.jpg" alt="Sara and Moses" fetchpriority="high">
-            <div class="gallery-number"><span id="galleryCurrent">01</span><i></i><span>12</span></div>
+            <div class="gallery-number"><span id="galleryCurrent">01</span><i></i><span>11</span></div>
             <div class="gallery-caption" id="galleryCaption">Together, in the little moments.</div>
             <div class="gallery-progress"><span id="galleryProgress"></span></div>
           </div>
@@ -266,48 +264,76 @@
     <!-- GIFTS -->
     <section id="gifts" class="section gifts">
       <div class="container gifts-grid">
-        <div>
+        <div class="gift-intro">
           <p class="eyebrow">04 · A little love</p>
           <h2>Your presence<br>is already a <em>gift.</em></h2>
-          <p class="gift-copy">
-            For anyone wishing to send a monetary gift, choose the preferred number below.
-          </p>
+
+          <div class="gift-message-card">
+            <span class="gift-message-kicker">A thoughtful gesture</span>
+            <div class="gift-ornament" aria-hidden="true"><i></i><span>✦</span><i></i></div>
+            <p>
+              Your presence is more than enough, but if you would like to Honor us with a gift, monetary gifts towards our home, will be sincerely appreciated.
+            </p>
+            <small>With gratitude &amp; appreciation</small>
+          </div>
         </div>
 
-        <div class="gift-card">
-          <div class="gift-card-head">Choose a number</div>
+        <div class="gift-card rsvp-gift-card">
+          <div class="gift-card-head">RSVP · Choose a number</div>
 
-          <button class="gift-option selected" type="button" data-name="Moses" data-number="0704594253">
-            <span class="gift-person"><strong>Moses</strong><small>0704 594 253</small></span>
-            <span class="gift-copy">Copy</span>
-          </button>
+          <div class="rsvp-person-card">
+            <div class="rsvp-person-head">
+              <span class="rsvp-person-name">Sara</span>
+              <a class="call-btn" href="tel:+254712311302">Call Sara</a>
+            </div>
+            <div class="number-row">
+              <span><small>Kenya</small><strong>+254 712 311 302</strong></span>
+              <button class="copy-number" type="button" data-number="+254712311302">Copy</button>
+            </div>
+            <div class="number-row">
+              <span><small>UK</small><strong>+44</strong></span>
+              <button class="copy-number" type="button" data-number="+44">Copy</button>
+            </div>
+          </div>
 
-          <button class="gift-option" type="button" data-name="Sara" data-number="0712311302">
-            <span class="gift-person"><strong>Sara</strong><small>0712 311 302</small></span>
-            <span class="gift-copy">Copy</span>
-          </button>
+          <div class="rsvp-person-card">
+            <div class="rsvp-person-head">
+              <span class="rsvp-person-name">Moses</span>
+              <a class="call-btn" href="tel:+254704594253">Call Moses</a>
+            </div>
+            <div class="number-row">
+              <span><small>Kenya</small><strong>+254 704 594 253</strong></span>
+              <button class="copy-number" type="button" data-number="+254704594253">Copy</button>
+            </div>
+            <div class="number-row">
+              <span><small>UK</small><strong>+44</strong></span>
+              <button class="copy-number" type="button" data-number="+44">Copy</button>
+            </div>
+          </div>
 
-          <p class="gift-status" id="giftStatus" role="status" aria-live="polite">Moses' number is selected.</p>
+          <p class="gift-status" id="giftStatus" role="status" aria-live="polite">Choose any number to copy it.</p>
         </div>
       </div>
     </section>
 
-    <!-- RSVP -->
-    <section class="section final-rsvp">
-      <div class="container rsvp-card">
+    <!-- LOVE QUOTE -->
+    <section class="section final-rsvp marriage-quote-section">
+      <div class="container rsvp-card marriage-quote-card love-quote-card">
         <div>
-          <p class="eyebrow">05 · RSVP</p>
-          <h2>We'd love to<br><em>hear from you.</em></h2>
+          <p class="eyebrow">05 · A word of love</p>
+          <h2>Where there is love,<br><em>there is beauty.</em></h2>
         </div>
-        <div class="rsvp-numbers">
-          <div class="contact-line"><span><b>Sara</b><strong>0712 311 302</strong></span><a class="call-btn" href="tel:+254712311302">Call Sara</a></div>
-          <div class="contact-line"><span><b>Moses</b><strong>0704 594 253</strong></span><a class="call-btn" href="tel:+254704594253">Call Moses</a></div>
+        <div class="marriage-quote">
+          <span class="quote-mark">“</span>
+          <blockquote>“Love bears all things, believes all things, hopes all things, endures all things.”</blockquote>
+          <span class="quote-source">1 Corinthians 13:7</span>
+          <span class="quote-mark closing-quote">”</span>
         </div>
       </div>
     </section>
 
     <footer class="closing">
-      <div class="closing-image"><img src="images/Image12.jpg" alt="" loading="lazy"></div>
+      <div class="closing-image"><img src="images/Image11.jpg" alt="" loading="lazy"></div>
       <div class="closing-overlay"></div>
       <div class="closing-content">
         <p class="eyebrow light">NYOMBO / RURACIO</p>
