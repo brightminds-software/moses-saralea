@@ -2,7 +2,7 @@
   --ink:#171512;--ink2:#24201b;--cream:#f3eee5;--paper:#e6dbca;
   --clay:#99533d;--moss:#485143;--gold:#b68b4d;--white:#fffdf8;
   --muted:#756d63;--line:rgba(23,21,18,.14);
-  --serif:"Playfair Display",Georgia,serif;--sans:"DM Sans",Arial,sans-serif
+  --serif:"Playfair Display",Georgia,serif;--sans:"DM Sans",Arial,sans-serif;--handwritten:"Amsterdam Handwriting","Segoe Script","Brush Script MT","Lucida Handwriting",cursive
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth;background:var(--ink)}
@@ -334,9 +334,12 @@ em{font-weight:500}
 }
 
 /* Premium RSVP + love detail treatment */
-.quote-detail{justify-content:flex-end;background:linear-gradient(145deg,#9a5b47 0%,#744033 100%);overflow:hidden}
+
+.quote-detail{justify-content:flex-end;background:#691f35 !important;overflow:hidden;position:relative;box-shadow:inset 0 1px 0 rgba(255,255,255,.08)}
+.quote-detail:before{content:"";position:absolute;inset:12px;border:1px solid rgba(255,255,255,.12);pointer-events:none}
+
 .quote-detail:after{content:"\“";position:absolute;right:-16px;top:26px;font-family:var(--serif);font-size:8rem;line-height:1;color:rgba(255,255,255,.08)}
-.quote-detail .detail-quote{max-width:280px;margin:16px 0 0;color:rgba(255,255,255,.84);font-family:var(--serif);font-size:1rem;line-height:1.4;opacity:1}
+.quote-detail .detail-quote{max-width:300px;margin:16px 0 0;color:rgba(255,255,255,.82);font-family:var(--serif);font-size:.9rem;line-height:1.45;opacity:1}.quote-detail .handwritten-love{font-family:var(--handwritten);font-weight:400;font-size:clamp(2.1rem,4vw,3.8rem);line-height:.95;letter-spacing:.01em;color:#fffaf4;text-shadow:0 8px 24px rgba(0,0,0,.18)}.quote-detail small{margin-top:11px;color:rgba(255,255,255,.62);font-size:.52rem;text-transform:uppercase;letter-spacing:.16em}
 .quote-detail small{margin-top:8px;color:rgba(255,255,255,.58);font-size:.55rem;text-transform:uppercase;letter-spacing:.14em}
 .rsvp-gift-card{padding:24px;background:linear-gradient(145deg,#f8f2e8,#efe5d5);border:1px solid rgba(23,21,18,.08);box-shadow:0 22px 55px rgba(23,21,18,.08)}
 .rsvp-gift-card .gift-card-head{font-size:.62rem;font-weight:700;color:var(--ink);letter-spacing:.18em;padding-bottom:16px}
@@ -352,7 +355,7 @@ em{font-weight:500}
 .marriage-quote-card .eyebrow{color:rgba(255,255,255,.55)}
 .marriage-quote-card h2{color:var(--white)}
 .marriage-quote{padding:10px 8px 4px 28px}.marriage-quote blockquote{color:rgba(255,255,255,.93);margin-top:18px}.quote-source{display:block;margin-top:18px;color:var(--gold);font-size:.57rem;font-weight:700;text-transform:uppercase;letter-spacing:.16em}.closing-quote{color:var(--gold)}
-@media(max-width:680px){.quote-detail .detail-quote{font-size:.96rem}.rsvp-gift-card{padding:18px}.rsvp-person-card{padding:15px 13px 10px}.number-row strong{font-size:.79rem}.copy-number{padding:7px 10px}.rsvp-person-name{font-size:1.35rem}.marriage-quote{padding-left:0}.marriage-quote-card{background:linear-gradient(160deg,#171512,#30261f)}}
+@media(max-width:680px){.quote-detail .detail-quote{font-size:.96rem}.rsvp-gift-card{padding:18px}.rsvp-person-card{padding:15px 13px 10px}.number-row strong{font-size:.79rem}.copy-number{padding:7px 10px}.rsvp-person-name{font-size:1.35rem}.marriage-quote{padding-left:0}.marriage-quote-card{background:#691f35 !important}}
 
 
 /* Final owner refinement: envelope reveal choreography */
