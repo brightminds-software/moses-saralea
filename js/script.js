@@ -78,9 +78,9 @@ document.addEventListener("DOMContentLoaded", () => {
   window.setInterval(updateCountdown, 1000);
 
 
-  // Lightweight 11-image gallery. Only the active image is swapped; there is
+  // Lightweight 21-image gallery. Only the active image is swapped; there is
   // one timer, so slow image loads cannot create a queue of transitions.
-  const galleryImages = Array.from({ length: 11 }, (_, i) => `images/Image${i + 1}.jpg`);
+  const galleryImages = Array.from({ length: 21 }, (_, i) => `images/Image${i + 1}.jpg`);
   const galleryCaptions = [
     "Together, in the little moments.",
     "A memory worth keeping close.",
@@ -92,18 +92,30 @@ document.addEventListener("DOMContentLoaded", () => {
     "A quiet moment before the celebration.",
     "Surrounded by warmth and memories.",
     "The people and moments that matter.",
-    "Almost time for the next chapter."
+    "Almost time for the next chapter.",
+    "One moment, another memory to keep.",
+    "Love, family and all the little details.",
+    "A frame from a beautiful journey.",
+    "Joy shared is joy remembered.",
+    "Every picture holds a piece of the story.",
+    "Warm hearts, familiar smiles.",
+    "A day made brighter by togetherness.",
+    "Memories growing with every chapter.",
+    "Held close, remembered forever.",
+    "Here is to love and the moments ahead."
   ];
   const galleryMain = document.getElementById("galleryMainImage");
   const galleryWrap = document.getElementById("galleryImageWrap");
   const galleryCaption = document.getElementById("galleryCaption");
   const galleryCurrent = document.getElementById("galleryCurrent");
+  const galleryTotal = document.getElementById("galleryTotal");
   const gallerySideText = document.getElementById("gallerySideText");
   const galleryProgress = document.getElementById("galleryProgress");
   const galleryThumbs = [...document.querySelectorAll(".gallery-thumb")];
   const galleryPrev = document.getElementById("galleryPrev");
   const galleryNext = document.getElementById("galleryNext");
   let galleryIndex = 0;
+  if (galleryTotal) galleryTotal.textContent = String(galleryImages.length).padStart(2, "0");
   let galleryTimer = null;
   let galleryBusy = false;
 
