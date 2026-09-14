@@ -5,17 +5,31 @@ document.addEventListener("DOMContentLoaded", () => {
   const opening = document.getElementById("opening");
   const openButton = document.getElementById("openInvitation");
   const main = document.getElementById("mainContent");
+  let envelopeOpened = false;
 
   const openEnvelope = () => {
+    if (envelopeOpened || !opening) return;
+    envelopeOpened = true;
+
     const flap = document.querySelector(".flap");
     if (flap) flap.style.transform = "rotateX(180deg)";
-    opening?.classList.add("opening-active");
+
+    opening.classList.add("opening-active");
+    const reveal = document.querySelector(".name-reveal");
+    if (reveal) reveal.setAttribute("aria-hidden", "false");
+
+    // Reveal the names after the envelope opens, hold them briefly, then enter the site.
     window.setTimeout(() => {
-      opening?.classList.add("dismissed");
+      opening.classList.add("names-revealed");
+    }, 900);
+
+    window.setTimeout(() => {
+      opening.classList.add("dismissed");
       main?.removeAttribute("aria-hidden");
       document.body.classList.remove("locked");
-    }, 620);
-    window.setTimeout(() => opening?.remove(), 1500);
+    }, 4850);
+
+    window.setTimeout(() => opening.remove(), 5950);
   };
 
   const envelopeTap = document.getElementById("envelopeTap");
@@ -64,9 +78,9 @@ document.addEventListener("DOMContentLoaded", () => {
   window.setInterval(updateCountdown, 1000);
 
 
-  // Lightweight 12-image gallery. Only the active image is swapped; there is
+  // Lightweight 11-image gallery. Only the active image is swapped; there is
   // one timer, so slow image loads cannot create a queue of transitions.
-  const galleryImages = Array.from({ length: 12 }, (_, i) => `images/Image${i + 1}.jpg`);
+  const galleryImages = Array.from({ length: 11 }, (_, i) => `images/Image${i + 1}.jpg`);
   const galleryCaptions = [
     "Together, in the little moments.",
     "A memory worth keeping close.",
@@ -78,8 +92,7 @@ document.addEventListener("DOMContentLoaded", () => {
     "A quiet moment before the celebration.",
     "Surrounded by warmth and memories.",
     "The people and moments that matter.",
-    "Almost time for the next chapter.",
-    "Ready for the day ahead."
+    "Almost time for the next chapter."
   ];
   const galleryMain = document.getElementById("galleryMainImage");
   const galleryWrap = document.getElementById("galleryImageWrap");
@@ -187,48 +200,55 @@ document.addEventListener("DOMContentLoaded", () => {
     resetGalleryTimer();
   }
 
-  // Gift copy
-  const choices = [...document.querySelectorAll(".gift-option")];
+  // Bible verses: one verse card changes every 15 seconds.
+  const verseSlides = [...document.querySelectorAll(".verse-slide")];
+  let verseIndex = 0;
+
+  if (verseSlides.length > 1) {
+    window.setInterval(() => {
+      verseSlides[verseIndex].classList.remove("active");
+      verseIndex = (verseIndex + 1) % verseSlides.length;
+      verseSlides[verseIndex].classList.add("active");
+    }, 15000);
+  }
+
+  // RSVP number copy buttons
+  const copyButtons = [...document.querySelectorAll(".copy-number")];
   const status = document.getElementById("giftStatus");
 
-  choices.forEach((choice) => {
-    choice.addEventListener("click", async () => {
-      choices.forEach((item) => item.classList.remove("selected"));
-      choice.classList.add("selected");
-
-      const name = choice.dataset.name;
-      const number = choice.dataset.number;
-      status.textContent = `${name}'s number is selected.`;
-
-      let copied = false;
-      try {
-        if (navigator.clipboard && window.isSecureContext) {
-          await navigator.clipboard.writeText(number);
-          copied = true;
-        } else {
-          const textarea = document.createElement("textarea");
-          textarea.value = number;
-          textarea.setAttribute("readonly", "");
-          textarea.style.position = "fixed";
-          textarea.style.opacity = "0";
-          document.body.appendChild(textarea);
-          textarea.select();
-          copied = document.execCommand("copy");
-          textarea.remove();
-        }
-      } catch {
-        copied = false;
-      }
-
-      const copy = choice.querySelector(".gift-copy");
-
-      if (copied) {
-        copy.textContent = "Copied";
-        status.textContent = `${number} for ${name} has been copied.`;
-        window.setTimeout(() => {
-          copy.textContent = "Copy";
-        }, 2200);
+  const copyNumber = async (number) => {
+    let copied = false;
+    try {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(number);
+        copied = true;
       } else {
+        const textarea = document.createElement("textarea");
+        textarea.value = number;
+        textarea.setAttribute("readonly", "");
+        textarea.style.position = "fixed";
+        textarea.style.opacity = "0";
+        document.body.appendChild(textarea);
+        textarea.select();
+        copied = document.execCommand("copy");
+        textarea.remove();
+      }
+    } catch {
+      copied = false;
+    }
+    return copied;
+  };
+
+  copyButtons.forEach((button) => {
+    button.addEventListener("click", async () => {
+      const number = button.dataset.number || "";
+      const copied = await copyNumber(number);
+      const original = button.textContent;
+      if (copied) {
+        button.textContent = "Copied";
+        if (status) status.textContent = `${number} has been copied.`;
+        window.setTimeout(() => { button.textContent = original; }, 2200);
+      } else if (status) {
         status.textContent = `Please copy ${number} manually.`;
       }
     });
